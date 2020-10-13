@@ -5,7 +5,10 @@ inputs:
     description: 'Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: true
   REPOSITORY:
-    description: 'Repo to push previews to'
+    description: 'Repository the pull request is created at'
+    required: true
+  PREVIEW_REPOSITORY:
+    description: 'Repository the pull request preview should be pushed to'
     required: true
   PA_TOKEN:
     description: 'Personal access token with permissions to push to preview-repo'
@@ -20,4 +23,5 @@ runs:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.PA_TOKEN }}
     - ${{ inputs.REPOSITORY }}
+    - ${{ inputs.PREVIEW_REPOSITORY }}
     - ${{ inputs.PULL_REQUEST_ID }}
