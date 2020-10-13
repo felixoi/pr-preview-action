@@ -14,6 +14,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.github_token }}
-    - ${{ inputs.pa_token }}
-    - ${{ inputs.repository }}
+    - ${{ inputs.GITHUB_TOKEN }}
+    - ${{ inputs.PA_TOKEN }}
+    - ${{ inputs.REPOSITORY }}
