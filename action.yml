@@ -1,13 +1,13 @@
 name: 'Pull Request Preview'
 description: 'Github Action for previewing changes in static websites'
 inputs:
-  github_token:
+  GITHUB_TOKEN:
     description: 'Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: true
-  preview-repo:
+  REPOSITORY:
     description: 'Repo to push previews to'
     required: true
-  pa-token:
+  PA_TOKEN:
     description: 'Personal access token with permissions to push to preview-repo'
     required: true
 runs:
@@ -15,5 +15,5 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.github_token }}
-    - ${{ inputs.preview-repo }}
-    - ${{ inputs.pa-token }}
+    - ${{ inputs.pa_token }}
+    - ${{ inputs.repository }}
