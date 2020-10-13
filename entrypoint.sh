@@ -16,7 +16,7 @@ result2=$(curl \
   https://api.github.com/repos/"$3"/deployments \
   -d "{\"ref\":\"$branch\", \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}")
 
-curl -v \
+curl --trace \
   -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: token $1" \
