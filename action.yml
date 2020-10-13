@@ -4,9 +4,6 @@ inputs:
   GITHUB_TOKEN:
     description: 'Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: true
-  REPOSITORY:
-    description: 'Repository the pull request is created at'
-    required: true
   PREVIEW_REPOSITORY:
     description: 'Repository the pull request preview should be pushed to'
     required: true
@@ -16,16 +13,11 @@ inputs:
   PULL_REQUEST_ID:
     description: 'The id of pull request which the preview should be deployed for'
     required: true
-  RUN_ID:
-    description: 'The github run id. Can be passed in using $\{{ github.run_id }}'
-    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.PA_TOKEN }}
-    - ${{ inputs.REPOSITORY }}
     - ${{ inputs.PREVIEW_REPOSITORY }}
     - ${{ inputs.PULL_REQUEST_ID }}
-    - ${{ inputs.RUN_ID }}
