@@ -4,14 +4,11 @@ inputs:
   GITHUB_TOKEN:
     description: 'Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: true
-  PREVIEW_REPOSITORY:
-    description: 'Repository the pull request preview should be pushed to'
-    required: true
   PA_TOKEN:
     description: 'Personal access token with permissions to push to preview-repo'
     required: true
-  PULL_REQUEST_ID:
-    description: 'The id of pull request which the preview should be deployed for'
+  PREVIEW_REPOSITORY:
+    description: 'Repository the pull request preview should be pushed to'
     required: true
 runs:
   using: 'docker'
@@ -20,4 +17,3 @@ runs:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.PA_TOKEN }}
     - ${{ inputs.PREVIEW_REPOSITORY }}
-    - ${{ inputs.PULL_REQUEST_ID }}
