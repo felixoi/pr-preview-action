@@ -16,6 +16,14 @@ result2=$(curl \
   https://api.github.com/repos/"$3"/deployments \
   -d "{\"ref\":\"$branch\", \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}")
 
+curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: token $1" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/"$3"/deployments \
+  -d "{\"ref\":\"$branch\", \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}"
+
 deployment_id=$(echo "$result2" | jq '.id')
 
 echo "Deployment: $deployment_id"
