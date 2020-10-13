@@ -16,6 +16,9 @@ inputs:
   PULL_REQUEST_ID:
     description: 'The id of pull request which the preview should be deployed for'
     required: true
+  RUN_ID:
+    description: 'The github run id. Can be passed in using $\{{ github.run_id }}'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -25,3 +28,4 @@ runs:
     - ${{ inputs.REPOSITORY }}
     - ${{ inputs.PREVIEW_REPOSITORY }}
     - ${{ inputs.PULL_REQUEST_ID }}
+    - ${{ inputs.RUN_ID }}
