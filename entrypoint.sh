@@ -16,7 +16,7 @@ result2=$(curl \
   https://api.github.com/repos/"$3"/deployments \
   -d "{\"ref\":\"$branch\", \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}")
 
-echo "{\"ref\":\"$branch\", \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}"
+echo "{\"ref\":$branch, \"environment\":\"dev\", \"required_contexts\": [], \"auto_merge\": false}"
 
 deployment_id=$(echo "$result2" | jq '.id')
 
