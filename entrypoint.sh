@@ -30,3 +30,6 @@ curl \
   -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
   https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$deployment_id"/statuses \
   -d "{\"environment\": \"dev\", \"environment_url\": \"http://example.com\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}"
+
+pwd
+ls -la
