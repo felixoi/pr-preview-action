@@ -5,6 +5,9 @@ result=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3
 
 branch=$(echo "$result" | jq '.head.ref')
 
+echo "Branch: $branch"
+sleep 5
+
 result2=$(curl \
   -X POST \
   -H "Content-Type: application/json" \
@@ -15,6 +18,9 @@ result2=$(curl \
 
 deployment_id=$(echo "$result2" | jq '.id')
 
+echo "Deployment: $deployment_id"
+sleep 5
+
 curl \
   -X POST \
   -H "Content-Type: application/json" \
@@ -22,6 +28,8 @@ curl \
   -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json,application/vnd.github.flash-preview+json" \
   https://api.github.com/repos/"$3"/deployments/"$deployment_id"/statuses \
   -d "{\"environment\": \"dev\", \"environment_url\": \"http://example.com\", \"state\": \"in_progress\", \"log_url\": \"https://github.com/$3/actions/runs/$6\"}"
+
+sleep 5
 
 curl \
   -X POST \
