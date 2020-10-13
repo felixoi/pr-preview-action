@@ -10,6 +10,9 @@ inputs:
   PA_TOKEN:
     description: 'Personal access token with permissions to push to preview-repo'
     required: true
+  PULL_REQUEST_ID:
+    description: 'The id of pull request which the preview should be deployed for'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -17,3 +20,4 @@ runs:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.PA_TOKEN }}
     - ${{ inputs.REPOSITORY }}
+    - ${{ inputs.PULL_REQUEST_ID }}

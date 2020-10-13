@@ -1,24 +1,6 @@
 #!/bin/sh -l
 
-if [ -z "$1" ]
-then
-      echo "\$GITHUB_TOKEN is empty"
-else
-      echo "\$GITHUB_TOKEN is NOT empty"
-fi
+result=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
+ https://api.github.com/repos/$3/pulls/$4)
 
-if [ -z "$2" ]
-then
-      echo "\$PA_TOKEN is empty"
-else
-      echo "\$PA_TOKEN is NOT empty"
-fi
-
-if [ -z "$3" ]
-then
-      echo "\$REPOSITORY is empty"
-else
-      echo "\$REPOSITORY is NOT empty: $3"
-fi
-
-exit 0
+jq '.head.ref' result
