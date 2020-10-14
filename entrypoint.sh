@@ -41,6 +41,8 @@ cd ..
 
 if [ -z "$(git status --porcelain)" ]
 then
+  echo "Preview for PR #$pull_request_id is already up-to-date!"
+else
   # create deployment
   result2=$(curl \
     -X POST \
@@ -81,6 +83,4 @@ then
   cd ..
   rm -r preview-deployment
   cd "$GITHUB_WORKSPACE" || exit 1
-else
-  echo "Preview for PR #$pull_request_id is already up-to-date!"
 fi
