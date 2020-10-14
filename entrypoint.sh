@@ -1,5 +1,8 @@
 #!/bin/sh
 
+pwd
+ls -la
+
 pull_request_id=$(echo "$GITHUB_REF" | awk -F / '{print $3}')
 
 # use PAT if no github token is set
@@ -13,7 +16,7 @@ result=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id")
 branch=$(echo "$result" | jq '.head.ref')
 
-cd "$GITHUB_WORKSPACE" || exit 1
+cd "$GITHUB_WORKSPACE/" || exit 1
 cd ..
 
 git clone "https://$2@github.com/$3.git" preview-deployment
@@ -26,10 +29,10 @@ mkdir -p "$pull_request_id"
 if [ -d "$pull_request_id" ]; then
   echo "Updating preview for pull request #$pull_request_id..."
   rm -r ./"$pull_request_id"
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'/.git','/.github'}
 else
   echo "Creating preview for pull request #$pull_request_id..."
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'/.git','/.github'}
 fi
 
 cd "$pull_request_id" || exit 1
