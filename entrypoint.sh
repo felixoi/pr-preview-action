@@ -34,11 +34,11 @@ curl \
 
 cd ..
 
-project_name=$(echo "$3" | awk -F / '{print $2}')
+pwd
 
-git clone "https://$2@github.com/$3.git"
+git clone "https://$2@github.com/$3.git" preview-deployment
 
-cd "$project_name" || exit 1
+cd "preview-deployment" || exit 1
 
 git config user.name "Deploy"
 git config user.email "felixoi@users.noreply.github.com"
@@ -47,10 +47,10 @@ mkdir -p "$pull_request_id"
 if [ -d "$pull_request_id" ]; then
   echo "Updating preview for pull request #$pull_request_id..."
   rm -r ./"$pull_request_id"
-  rsync -av --progress "$GITHUB_WORKSPACE"/* ./"$pull_request_id"/ --exclude={'.git','.github','scripts'}
+  rsync -avz "$GITHUB_WORKSPACE" ./"$pull_request_id" --exclude={'.git','.github'}
 else
   echo "Creating preview for pull request #$pull_request_id..."
-  rsync -av --progress "$GITHUB_WORKSPACE"/* ./"$pull_request_id"/ --exclude={'.git','.github','scripts'}
+  rsync -avz "$GITHUB_WORKSPACE" ./"$pull_request_id" --exclude={'.git','.github'}
 fi
 
 git add -A
