@@ -22,6 +22,8 @@ cd ..
 git clone "https://$2@github.com/$3.git" preview-deployment
 
 cd "preview-deployment" || exit 1
+git config user.name "Deploy"
+git config user.email "deploy@users.noreply.github.com"
 
 echo "Workspace: $GITHUB_WORKSPACE"
 
