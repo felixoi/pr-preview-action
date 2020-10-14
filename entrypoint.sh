@@ -22,8 +22,8 @@ cd ..
 git clone "https://$2@github.com/$3.git" preview-deployment
 
 cd "preview-deployment" || exit 1
-git config user.name "Deploy"
-git config user.email "deploy@users.noreply.github.com"
+git config user.name "felixoi"
+git config user.email "felixoi@users.noreply.github.com"
 
 echo "Workspace: $GITHUB_WORKSPACE"
 
@@ -31,10 +31,10 @@ mkdir -p "$pull_request_id"
 if [ -d "$pull_request_id" ]; then
   echo "Updating preview for pull request #$pull_request_id..."
   rm -r ./"$pull_request_id"
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'/.git','/.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude='.git' --exclude '.github'
 else
   echo "Creating preview for pull request #$pull_request_id..."
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'/.git','/.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude='.git' --exclude '.github'
 fi
 
 cd "$pull_request_id" || exit 1
