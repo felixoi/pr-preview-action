@@ -20,15 +20,21 @@ git clone "https://$2@github.com/$3.git" preview-deployment
 
 cd "preview-deployment" || exit 1
 
+echo "Workspace: $GITHUB_WORKSPACE"
+
 mkdir -p "$pull_request_id"
 if [ -d "$pull_request_id" ]; then
   echo "Updating preview for pull request #$pull_request_id..."
   rm -r ./"$pull_request_id"
-  rsync -avz "$GITHUB_WORKSPACE"/ ./"$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE" "$pull_request_id" --exclude={'.git','.github'}
 else
   echo "Creating preview for pull request #$pull_request_id..."
-  rsync -avz "$GITHUB_WORKSPACE"/ ./"$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE" "$pull_request_id" --exclude={'.git','.github'}
 fi
+
+cd "$pull_request_id" || exit 1
+ls -la
+cd ..
 
 if [ -z "$(git status --porcelain)" ]
 then
@@ -64,7 +70,7 @@ then
     -H "Authorization: token $1" \
     -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
     https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$deployment_id"/statuses \
-    -d "{\"environment\": \"dev\", \"environment_url\": \"http://example.com\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
+    -d "{\"environment\": \"PR $pull_request_id\", \"environment_url\": \"$4/$pull_request_id\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
     >> /dev/null
 
   echo "Successfully deployed preview for PR #$pull_request_id!"

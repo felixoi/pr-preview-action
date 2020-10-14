@@ -10,6 +10,9 @@ inputs:
   PREVIEW_REPOSITORY:
     description: 'Repository the pull request preview should be pushed to'
     required: true
+  GITHUB_PAGES_BASE:
+    description: 'Base URL of the configured Github Pages'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -17,3 +20,4 @@ runs:
     - ${{ inputs.GITHUB_TOKEN }}
     - ${{ inputs.PA_TOKEN }}
     - ${{ inputs.PREVIEW_REPOSITORY }}
+    - ${{ inputs.GITHUB_PAGES_BASE }}
