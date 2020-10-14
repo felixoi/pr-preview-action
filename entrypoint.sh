@@ -87,6 +87,5 @@ fi
 
 result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id"/files)
- input.json
-files=$(echo "$result3" | jq -r '.[] | .filename')
+files=$(echo "$result3" | jq '.[] | select(.filename|test(".*\.html")) | .filename')
 echo "$files"
