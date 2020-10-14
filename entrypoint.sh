@@ -83,9 +83,9 @@ else
   curl \
     -X POST \
     -H "Content-Type: application/json" \
-    -H "Authorization: token $1" \
+    -H "Authorization: token $2" \
     -H "Accept: application/vnd.github.v3+json" \
-    https://api.github.com/repos/"$GITHUB_REPOSITORY"/pages/builds
+    https://api.github.com/repos/"$3"/pages/builds
 
   echo "Successfully deployed preview for PR #$pull_request_id!"
 
