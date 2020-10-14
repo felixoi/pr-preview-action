@@ -80,6 +80,13 @@ else
     -d "{\"environment\": \"PR $pull_request_id\", \"environment_url\": \"$4/$pull_request_id\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
     >> /dev/null
 
+  curl \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -H "Authorization: token $1" \
+    -H "Accept: application/vnd.github.v3+json" \
+    https://api.github.com/repos/"$GITHUB_REPOSITORY"/pages/builds
+
   echo "Successfully deployed preview for PR #$pull_request_id!"
 
   cd ..
