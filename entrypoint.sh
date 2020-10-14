@@ -26,10 +26,10 @@ mkdir -p "$pull_request_id"
 if [ -d "$pull_request_id" ]; then
   echo "Updating preview for pull request #$pull_request_id..."
   rm -r ./"$pull_request_id"
-  rsync -avz "$GITHUB_WORKSPACE" "$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'.git','.github'}
 else
   echo "Creating preview for pull request #$pull_request_id..."
-  rsync -avz "$GITHUB_WORKSPACE" "$pull_request_id" --exclude={'.git','.github'}
+  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude={'.git','.github'}
 fi
 
 cd "$pull_request_id" || exit 1
