@@ -23,12 +23,13 @@ r.raise_for_status()
 branch = r.json()['head']['ref']
 
 r = requests.post(f'{github_api}/repos/{repo}/deployments',
-                  json=json.dumps({
+                  data=json.dumps({
                       "ref": branch,
                       "environment": f"PR-{pr}",
                       "required_contexts": [],
                       "auto_merge": False
-                  }), kwargs=headers)
+                  }),
+                  headers=headers)
 r.raise_for_status()
 deployment_id = r.json()['id']
 
