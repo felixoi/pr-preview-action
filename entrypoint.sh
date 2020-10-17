@@ -96,5 +96,7 @@ for file in $files
 do
   file=$(echo "$file" | awk -F - '{print $1}')
   type=$(echo "$file" | awk -F - '{print $2}')
+  echo "File: $file"
+  echo "Type: $type"
   echo "- $type: $4/$pull_request_id/$file"
 done
