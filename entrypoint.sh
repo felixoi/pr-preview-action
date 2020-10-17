@@ -112,9 +112,9 @@ fi
 
 result5=$(curl -H "Authorization: token $token" -H "Accept: application/vnd.github.v3.full+json" \
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments)
-echo "$result5" | jq -r ".[] | select(.user.login|test(\"$login\"))[0] | .id"
+comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\")) | .id)")
 
-if [ -z "$result5" ]
+if [ -z "$comment" ]
 then
   echo "No comment"
 else
