@@ -132,7 +132,5 @@ fi
 
 cd / | exit 1
 ls -la
-cd scripts | exit 1
-ls -la
 
 python3 /scripts/create_deployment
