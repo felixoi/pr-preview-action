@@ -89,15 +89,15 @@ result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id"/files)
 files=$(echo "$result3" | jq -r '.[] | select(.filename|test(".*\\.html")) | "\(.filename)-\(.status)"')
 
-echo "A preview for this pull request is available at $4/$pull_request_id."
-
-echo "Here are some links to the pages that were modified:"
+body="A preview for this pull request is available at $4/$pull_request_id.
+      Here are some links to the pages that were modified:"
 
 for file in $files
 do
   file_name=$(echo "$file" | awk -F - '{print $1}')
   type=$(echo "$file" | awk -F - '{print $2}')
-  echo "- $type: $4/$pull_request_id/$file_name"
+  body="$body
+  - $type: $4/$pull_request_id/$file_name"
 done
 
 login="github-actions"
@@ -117,6 +117,12 @@ comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\
 if [ -z "$comment" ]
 then
   echo "No comment"
+  curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: token $token" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments \
+  -d "{\"body\":\"$body\"}"
 else
   echo "Comment: $result5"
 fi
