@@ -133,4 +133,4 @@ fi
 cd /scripts
 ls -la
 
-python3 scripts/create_deployment
+python3 /scripts/create_deployment.py
