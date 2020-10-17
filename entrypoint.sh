@@ -31,7 +31,7 @@ if [ -z "$(git status --porcelain)" ]
 then
   echo "Preview for PR #$pr is already up-to-date!"
 else
-  deployment_id=$(python3 /scripts/create_deployment.py)
+  deployment_id=$(python3 /scripts/create_deployment.py 2>&1)
 
   git add -A
   git commit -q -m "Deployed preview for PR #$pr"
