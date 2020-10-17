@@ -90,6 +90,7 @@ result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v
 files=$(echo "$result3" | jq -r '.[] | select(.filename|test(".*\\.html")) | "\(.filename)-\(.status)"')
 
 echo "A preview for this pull request is available at $4/$pull_request_id."
+
 echo "Here are some links to the pages that were modified:"
 
 for file in $files
@@ -98,3 +99,24 @@ do
   type=$(echo "$file" | awk -F - '{print $2}')
   echo "- $type: $4/$pull_request_id/$file_name"
 done
+
+login="github-actions"
+token=$1
+if echo "$5" | grep -iqF true; then
+    result4=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
+      https://api.github.com/user)
+
+    login=$(echo "$result4" | jq -r '.login')
+    token=$2
+fi
+
+result5=$(curl -H "Authorization: token $token" -H "Accept: application/vnd.github.v3.full+json" \
+ https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments)
+echo "$result5" | jq -r ".[] | select(.user.login|test('$login'))[0] | .id"
+
+if [ -z "$result5" ]
+then
+  echo "No comment"
+else
+  echo "Comment"
+fi
