@@ -117,6 +117,7 @@ comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\
 if [ -z "$comment" ]
 then
   echo "No comment"
+  echo "{\"body\":\"$body\"}"
   curl -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: token $token" \
