@@ -16,7 +16,7 @@ inputs:
   FORCE_PAT:
     description: 'Whether the personal access token should be used for all actions'
     required: false
-    default: 'false'
+    default: 'true'
 runs:
   using: 'docker'
   image: 'Dockerfile'

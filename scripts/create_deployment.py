@@ -3,6 +3,7 @@
 import json
 import os
 
-print("hello from python")
-for k, v in os.environ.items():
-    print(f'{k}={v}')
+force_pat = os.getenv('INPUT_FORCE_PAT', 'false').lower() == 'true'
+
+if force_pat:
+    print("FORCEEE")
