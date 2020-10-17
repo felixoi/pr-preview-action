@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 
 import requests
 
@@ -44,4 +45,5 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                       "log_url": f"{github_base}/{repo}/actions/runs/{run_id}"
                   }), headers_custom)
 
-print(deployment_id)
+sys.exit(deployment_id)
+
