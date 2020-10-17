@@ -13,8 +13,8 @@ inputs:
   GITHUB_PAGES_BASE:
     description: 'Base URL of the configured Github Pages'
     required: true
-  COMMENT_PA:
-    description: 'Whether the comment is created by the user of the PAT or by the github-actions user'
+  FORCE_PAT:
+    description: 'Whether the personal access token should be used for all actions'
     required: false
     default: 'false'
 runs:
@@ -25,4 +25,4 @@ runs:
     - ${{ inputs.PA_TOKEN }}
     - ${{ inputs.PREVIEW_REPOSITORY }}
     - ${{ inputs.GITHUB_PAGES_BASE }}
-    - ${{ inputs.COMMENT_PA }}
+    - ${{ inputs.FORCE_PAT }}
