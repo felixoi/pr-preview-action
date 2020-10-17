@@ -1,17 +1,12 @@
 #!/bin/sh
 
-pull_request_id=$(echo "$GITHUB_REF" | awk -F / '{print $3}')
+pr=$(echo "$GITHUB_REF" | awk -F / '{print $3}')
 
 # use PAT if no github token is set
 if [ -z "$1" ]
 then
       "$1"="$2"
 fi
-
-# fetch pull request branch
-result=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
- https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id")
-branch=$(echo "$result" | jq '.head.ref')
 
 cd "$GITHUB_WORKSPACE/" || exit 1
 cd ..
@@ -22,43 +17,24 @@ cd "preview-deployment" || exit 1
 git config user.name "felixoi"
 git config user.email "felixoi@users.noreply.github.com"
 
-mkdir -p "$pull_request_id"
-if [ -d "$pull_request_id" ]; then
-  echo "Updating preview for pull request #$pull_request_id..."
-  rm -r ./"$pull_request_id"
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude='.git' --exclude '.github'
+mkdir -p "$pr"
+if [ -d "$pr" ]; then
+  echo "Updating preview for pull request #$pr..."
+  rm -r ./"$pr"
+  rsync -avz "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
 else
-  echo "Creating preview for pull request #$pull_request_id..."
-  rsync -avz "$GITHUB_WORKSPACE/" "$pull_request_id" --exclude='.git' --exclude '.github'
+  echo "Creating preview for pull request #$pr..."
+  rsync -avz "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
 fi
 
 if [ -z "$(git status --porcelain)" ]
 then
-  echo "Preview for PR #$pull_request_id is already up-to-date!"
+  echo "Preview for PR #$pr is already up-to-date!"
 else
-  # create deployment
-  result2=$(curl \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -H "Authorization: token $1" \
-    -H "Accept: application/vnd.github.v3+json" \
-    https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments \
-    -d "{\"ref\":$branch, \"environment\":\"PR-$pull_request_id\", \"required_contexts\": [], \"auto_merge\": false}")
-  deployment_id=$(echo "$result2" | jq '.id')
-
-  # create deployment status in_progress
-  curl \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -H "Authorization: token $1" \
-    -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json,application/vnd.github.flash-preview+json" \
-    https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$deployment_id"/statuses \
-    -d "{\"environment\": \"$pull_request_id\", \"environment_url\": \"$4/$pull_request_id\", \"state\": \"in_progress\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
-    >> /dev/null
-
+  deployment_id=$(python3 /scripts/create_deployment.py)
 
   git add -A
-  git commit -q -m "Deployed preview for PR #$pull_request_id"
+  git commit -q -m "Deployed preview for PR #$pr"
   git push -q origin gh-pages
 
   # create deployment status success
@@ -68,7 +44,7 @@ else
     -H "Authorization: token $1" \
     -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
     https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$deployment_id"/statuses \
-    -d "{\"environment\": \"PR $pull_request_id\", \"environment_url\": \"$4/$pull_request_id\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
+    -d "{\"environment\": \"PR $pr\", \"environment_url\": \"$4/$pr\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
     >> /dev/null
 
   curl \
@@ -78,7 +54,7 @@ else
     -H "Accept: application/vnd.github.v3+json" \
     https://api.github.com/repos/"$3"/pages/builds >> /dev/null
 
-  echo "Successfully deployed preview for PR #$pull_request_id!"
+  echo "Successfully deployed preview for PR #$pr!"
 
   cd ..
   rm -r preview-deployment
@@ -86,16 +62,16 @@ else
 fi
 
 result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
- https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id"/files)
+ https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pr"/files)
 files=$(echo "$result3" | jq -r '.[] | select(.filename|test(".*\\.html")) | "\(.filename)-\(.status)"')
 
-body="A preview for this pull request is available at $4/$pull_request_id.\n\nHere are some links to the pages that were modified:"
+body="A preview for this pull request is available at $4/$pr.\n\nHere are some links to the pages that were modified:"
 
 for file in $files
 do
   file_name=$(echo "$file" | awk -F - '{print $1}')
   type=$(echo "$file" | awk -F - '{print $2}')
-  body="$body\n- $type: $4/$pull_request_id/$file_name"
+  body="$body\n- $type: $4/$pr/$file_name"
 done
 
 login="github-actions"
@@ -109,7 +85,7 @@ if echo "$5" | grep -iqF true; then
 fi
 
 result5=$(curl -H "Authorization: token $token" -H "Accept: application/vnd.github.v3.full+json" \
- https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments)
+ https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pr"/comments)
 comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\")) | .id)")
 
 if [ -z "$comment" ]
@@ -118,7 +94,7 @@ then
   -H "Content-Type: application/json" \
   -H "Authorization: token $token" \
   -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments \
+  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pr"/comments \
   -d "{\"body\":\"$body\"}" \
   >> /dev/null
 else
