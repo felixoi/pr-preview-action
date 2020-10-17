@@ -89,15 +89,13 @@ result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id"/files)
 files=$(echo "$result3" | jq -r '.[] | select(.filename|test(".*\\.html")) | "\(.filename)-\(.status)"')
 
-body="A preview for this pull request is available at $4/$pull_request_id.
-      Here are some links to the pages that were modified:"
+body="A preview for this pull request is available at $4/$pull_request_id.\nHere are some links to the pages that were modified:"
 
 for file in $files
 do
   file_name=$(echo "$file" | awk -F - '{print $1}')
   type=$(echo "$file" | awk -F - '{print $2}')
-  body="$body
-  - $type: $4/$pull_request_id/$file_name"
+  body="$body\n- $type: $4/$pull_request_id/$file_name"
 done
 
 login="github-actions"
