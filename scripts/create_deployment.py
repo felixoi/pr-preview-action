@@ -5,6 +5,7 @@ import os
 
 import requests
 
+github_api = os.environ['GITHUB_API_URL']
 token = os.environ['INPUT_PA_TOKEN'] if os.getenv('INPUT_FORCE_PAT', 'false').lower() == 'true' \
     else os.environ['GITHUB_TOKEN']
 headers = {
@@ -14,7 +15,6 @@ headers = {
 pr = os.environ['GITHUB_REF'].split('/')[2]
 repo = os.environ['GITHUB_REPOSITORY']
 
-requests.get(f'https://api.github.com/repos/{repo}/pulls/{pr}', headers)
-r = requests.get('%s/pulls/%s/files' % (repo, pr), headers)
+r = requests.get(f'{github_api}/repos/{repo}/pulls/{pr}', headers)
 r.raise_for_status()
 print(r.json()['head']['ref'])
