@@ -94,5 +94,7 @@ echo "Here are some links to the pages that were modified:"
 
 for file in $files
 do
-  echo "$file"
+  file=$(echo "$file" | awk -F - '{print $1}')
+  type=$(echo "$file" | awk -F - '{print $2}')
+  echo "- $type: $4/$pull_request_id/$file"
 done
