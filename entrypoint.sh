@@ -43,7 +43,7 @@ else
     -H "Authorization: token $1" \
     -H "Accept: application/vnd.github.v3+json" \
     https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments \
-    -d "{\"ref\":$branch, \"environment\":\"$4/$pull_request_id\", \"required_contexts\": [], \"auto_merge\": false}")
+    -d "{\"ref\":$branch, \"environment\":\"PR-$pull_request_id\", \"required_contexts\": [], \"auto_merge\": false}")
   deployment_id=$(echo "$result2" | jq '.id')
 
   # create deployment status in_progress
@@ -129,3 +129,6 @@ else
   https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/comments/"$comment" \
   -d "{\"body\":\"$body\"}"
 fi
+
+python -v
+python scripts/create_deployment
