@@ -130,7 +130,7 @@ else
   -d "{\"body\":\"$body\"}"
 fi
 
-cd /
+cd /scripts
 ls -la
 
 python3 scripts/create_deployment
