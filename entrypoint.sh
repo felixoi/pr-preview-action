@@ -89,7 +89,7 @@ result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pull_request_id"/files)
 files=$(echo "$result3" | jq -r '.[] | select(.filename|test(".*\\.html")) | "\(.filename)-\(.status)"')
 
-body="A preview for this pull request is available at $4/$pull_request_id.\nHere are some links to the pages that were modified:"
+body="A preview for this pull request is available at $4/$pull_request_id.\n\nHere are some links to the pages that were modified:"
 
 for file in $files
 do
@@ -114,14 +114,18 @@ comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\
 
 if [ -z "$comment" ]
 then
-  echo "No comment"
-  echo "{\"body\":\"$body\"}"
   curl -X POST \
   -H "Content-Type: application/json" \
   -H "Authorization: token $token" \
   -H "Accept: application/vnd.github.v3+json" \
   https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pull_request_id"/comments \
-  -d "{\"body\":\"$body\"}"
+  -d "{\"body\":\"$body\"}" \
+  >> /dev/null
 else
-  echo "Comment: $result5"
+  curl -X PATCH \
+  -H "Content-Type: application/json" \
+  -H "Authorization: token $token" \
+  -H "Accept: application/vnd.github.v3+json" \
+  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/comments/"$comment" \
+  -d "{\"body\":\"$body\"}"
 fi
