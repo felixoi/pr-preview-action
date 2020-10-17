@@ -118,5 +118,5 @@ if [ -z "$result5" ]
 then
   echo "No comment"
 else
-  echo "Comment"
+  echo "Comment: $result5"
 fi
