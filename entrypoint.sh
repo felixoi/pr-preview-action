@@ -130,5 +130,5 @@ else
   -d "{\"body\":\"$body\"}"
 fi
 
-python -v
-python scripts/create_deployment
+python3 -v
+python3 scripts/create_deployment
