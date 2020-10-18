@@ -9,7 +9,7 @@ github_base = os.environ['GITHUB_SERVER_URL']
 github_api = os.environ['GITHUB_API_URL']
 run_id = os.environ['GITHUB_RUN_ID']
 token = os.environ['INPUT_PA_TOKEN'] if os.getenv('INPUT_FORCE_PAT', 'false').lower() == 'true' \
-    else os.environ['GITHUB_TOKEN']
+    else os.environ['INPUT_GITHUB_TOKEN']
 headers = {
     'Authorization': 'token ' + token,
     'Accept': 'application/vnd.github.v3.full+json'
@@ -34,7 +34,7 @@ r.raise_for_status()
 deployment_id = r.json()['id']
 
 headers_custom = headers.copy()
-headers_custom['Authorization'] = 'token ' + os.environ['GITHUB_TOKEN']
+headers_custom['Authorization'] = 'token ' + os.environ['INPUT_GITHUB_TOKEN']
 headers_custom['Accept'] = "application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json," \
                            "application/vnd.github.flash-preview+json"
 print(headers_custom)
