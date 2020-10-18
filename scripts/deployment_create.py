@@ -2,7 +2,6 @@
 
 import json
 import os
-import sys
 
 import requests
 
@@ -46,4 +45,3 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                   }), headers_custom)
 
 pr = os.environ['DEPLOYMENT_ID'] = f"{deployment_id}"
-
