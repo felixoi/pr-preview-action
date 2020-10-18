@@ -37,6 +37,10 @@ else
   git commit -q -m "Deployed preview for PR #$pr"
   git push -q origin gh-pages
 
+  while [ -z "$DEPLOYMENT_ID" ]; do
+      sleep 1
+  done
+
   # create deployment status success
   curl \
     -X POST \
