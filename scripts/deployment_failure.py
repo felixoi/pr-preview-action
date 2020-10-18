@@ -5,7 +5,7 @@ import os
 
 import requests
 
-from .variables import github_api, repo, pr, pages_base, github_base, run_id, headers
+from variables import github_api, repo, pr, pages_base, github_base, run_id, headers
 
 deployment_id = os.environ['DEPLOYMENT_ID']
 
