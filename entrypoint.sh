@@ -45,7 +45,6 @@ else
     -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
     https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$DEPLOYMENT_ID"/statuses \
     -d "{\"environment\": \"PR $pr\", \"environment_url\": \"$4/$pr\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
-    >> /dev/null
 
   curl \
     -X POST \
