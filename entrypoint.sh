@@ -105,4 +105,3 @@ else
   -d "{\"body\":\"$body\"}"
 fi
 
-python3 /scripts/create_deployment.py
