@@ -31,7 +31,7 @@ if [ -z "$(git status --porcelain)" ]
 then
   echo "Preview for PR #$pr is already up-to-date!"
 else
-  deployment_id=$(python3 /scripts/create_deployment.py 2>&1)
+  python3 /scripts/create_deployment.py
 
   git add -A
   git commit -q -m "Deployed preview for PR #$pr"
@@ -43,7 +43,7 @@ else
     -H "Content-Type: application/json" \
     -H "Authorization: token $1" \
     -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
-    https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$deployment_id"/statuses \
+    https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$DEPLOYMENT_ID"/statuses \
     -d "{\"environment\": \"PR $pr\", \"environment_url\": \"$4/$pr\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
     >> /dev/null
 

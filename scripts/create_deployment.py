@@ -45,5 +45,5 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                       "log_url": f"{github_base}/{repo}/actions/runs/{run_id}"
                   }), headers_custom)
 
-sys.exit(deployment_id)
+pr = os.environ['DEPLOYMENT_ID'] = deployment_id
 
