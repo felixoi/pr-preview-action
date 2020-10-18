@@ -34,8 +34,9 @@ r.raise_for_status()
 deployment_id = r.json()['id']
 
 headers_custom = headers.copy()
+headers_custom['Authorization'] = 'token ' + os.environ['GITHUB_TOKEN']
 headers_custom['Accept'] = "application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json," \
-                           "application/vnd.github.flash-preview+json "
+                           "application/vnd.github.flash-preview+json"
 print(headers_custom)
 r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/statuses',
                   json.dumps({
