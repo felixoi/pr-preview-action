@@ -2,9 +2,9 @@
 
 import json
 import os
+import pipes
 
 import requests
-
 from variables import github_api, repo, pr, pages_base, github_base, run_id, headers
 
 r = requests.get(f'{github_api}/repos/{repo}/pulls/{pr}', headers)
@@ -35,4 +35,4 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                   }), headers=headers_custom)
 r.raise_for_status()
 
-os.environ['DEPLOYMENT_ID'] = f"{deployment_id}"
+print("export DEPLOYMENT_ID=%s" % (pipes.quote(str(deployment_id))))
