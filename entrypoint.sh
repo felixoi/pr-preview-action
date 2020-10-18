@@ -35,7 +35,11 @@ else
 
   git add -A
   git commit -q -m "Deployed preview for PR #$pr"
-  git push -q origin gh-pages
+  #git push -q origin gh-pages
+
+  while [ -z "$DEPLOYMENT_ID" ]; do
+      sleep 1
+  done
 
   python3 /scripts/deployment_success.py
 
