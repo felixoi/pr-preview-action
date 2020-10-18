@@ -31,13 +31,13 @@ if [ -z "$(git status --porcelain)" ]
 then
   echo "Preview for PR #$pr is already up-to-date!"
 else
-  python3 -m /scripts/deployment_create.py
+  python3 /scripts/deployment_create.py
 
   git add -A
   git commit -q -m "Deployed preview for PR #$pr"
   git push -q origin gh-pages
 
-  python3 -m /scripts/deployment_success.py
+  python3 /scripts/deployment_success.py
 
   curl \
     -X POST \
