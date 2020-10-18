@@ -37,14 +37,7 @@ else
   git commit -q -m "Deployed preview for PR #$pr"
   git push -q origin gh-pages
 
-  # create deployment status success
-  curl \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -H "Authorization: token $1" \
-    -H "Accept: application/vnd.github.v3+json,application/vnd.github.ant-man-preview+json" \
-    https://api.github.com/repos/"$GITHUB_REPOSITORY"/deployments/"$DEPLOYMENT_ID"/statuses \
-    -d "{\"environment\": \"PR $pr\", \"environment_url\": \"$4/$pr\", \"state\": \"success\", \"log_url\": \"https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}"
+  python3 /scripts/deployment_success.py
 
   curl \
     -X POST \
