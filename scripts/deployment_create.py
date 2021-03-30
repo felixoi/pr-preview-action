@@ -21,6 +21,7 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments',
                   headers=headers)
 r.raise_for_status()
 deployment_id = r.json()['id']
+print("export DEPLOYMENT_ID=%s" % (pipes.quote(str(deployment_id))))
 
 headers_custom = headers.copy()
 headers_custom['Authorization'] = 'token ' + os.environ['INPUT_GITHUB_TOKEN']
@@ -35,4 +36,3 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                   }), headers=headers_custom)
 r.raise_for_status()
 
-print("export DEPLOYMENT_ID=%s" % (pipes.quote(str(deployment_id))))

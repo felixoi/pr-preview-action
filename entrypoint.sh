@@ -1,6 +1,16 @@
 #!/bin/sh
 
 pr=$(echo "$GITHUB_REF" | awk -F / '{print $3}')
+check_return_code() {
+  ret=$?
+  if [ $ret -ne 0 ]; then
+    echo "Python script failed. Check the logs."
+    if [ -n "$DEPLOYMENT_ID" ]; then
+        python3 /scripts/deployment_failure.py
+    fi
+    exit 1
+  fi
+}
 
 # use PAT if no github token is set
 if [ -z "$1" ]
@@ -21,32 +31,24 @@ mkdir -p "$pr"
 if [ -d "$pr" ]; then
   echo "Updating preview for pull request #$pr..."
   rm -r ./"$pr"
-  rsync -avz "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
+  rsync -az "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
 else
   echo "Creating preview for pull request #$pr..."
-  rsync -avz "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
+  rsync -az "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
 fi
 
 if [ -z "$(git status --porcelain)" ]
 then
   echo "Preview for PR #$pr is already up-to-date!"
 else
-  eval "$(python3 /scripts/deployment_create.py)"
+  eval "$(python3 /scripts/deployment_create.py && check_return_code)"
 
   git add -A
   git commit -q -m "Deployed preview for PR #$pr"
-  #git push -q origin gh-pages
-
-
+  git push -q origin gh-pages
 
   python3 /scripts/deployment_success.py
-
-  curl \
-    -X POST \
-    -H "Content-Type: application/json" \
-    -H "Authorization: token $2" \
-    -H "Accept: application/vnd.github.v3+json" \
-    https://api.github.com/repos/"$3"/pages/builds >> /dev/null
+  check_return_code
 
   echo "Successfully deployed preview for PR #$pr!"
 
