@@ -37,25 +37,19 @@ else
   rsync -az "$GITHUB_WORKSPACE/" "$pr" --exclude='.git' --exclude '.github'
 fi
 
-if [ -z "$(git status --porcelain)" ]
-then
-  echo "Preview for PR #$pr is already up-to-date!"
-else
-  eval "$(python3 /scripts/deployment_create.py && check_return_code)"
+eval "$(python3 /scripts/deployment_create.py && check_return_code)"
 
-  git add -A
-  git commit -q -m "Deployed preview for PR #$pr"
-  git push -q origin gh-pages
+git add -A
+git commit --allow-empty -q -m "Deployed preview for PR #$pr"
+git push -q origin gh-pages
 
-  python3 /scripts/deployment_success.py
-  check_return_code
+eval "$(scripts/deployment_success.py && check_return_code)"
 
-  echo "Successfully deployed preview for PR #$pr!"
+echo "Successfully deployed preview for PR #$pr!"
 
-  cd ..
-  rm -r preview-deployment
-  cd "$GITHUB_WORKSPACE" || exit 1
-fi
+cd ..
+rm -r preview-deployment
+cd "$GITHUB_WORKSPACE" || exit 1
 
 result3=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/pulls/"$pr"/files)
