@@ -84,6 +84,10 @@ result5=$(curl -H "Authorization: token $token" -H "Accept: application/vnd.gith
  https://api.github.com/repos/"$GITHUB_REPOSITORY"/issues/"$pr"/comments)
 comment=$(echo "$result5" | jq -r "first(.[] | select(.user.login|test(\"$login\")) | .id)")
 
+print result5
+print comment
+print "$login"
+
 if [ -z "$comment" ]
 then
   curl -X POST \
