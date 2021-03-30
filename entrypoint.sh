@@ -67,7 +67,7 @@ done
 login="github-actions"
 token=$1
 if echo "$5" | grep -iqF true; then
-    result4=$(curl -H "Authorization: token $1" -H "Accept: application/vnd.github.v3.full+json" \
+    result4=$(curl -H "Authorization: token $2" -H "Accept: application/vnd.github.v3.full+json" \
       https://api.github.com/user)
 
     login=$(echo "$result4" | jq -r '.login')
