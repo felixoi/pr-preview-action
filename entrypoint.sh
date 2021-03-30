@@ -43,7 +43,7 @@ git add -A
 git commit --allow-empty -q -m "Deployed preview for PR #$pr"
 git push -q origin gh-pages
 
-eval "$(scripts/deployment_success.py && check_return_code)"
+eval "$(python3 /scripts/deployment_success.py && check_return_code)"
 
 echo "Successfully deployed preview for PR #$pr!"
 
@@ -72,6 +72,11 @@ if echo "$5" | grep -iqF true; then
 
     login=$(echo "$result4" | jq -r '.login')
     token=$2
+
+    echo "=================="
+    echo "$result4"
+    echo "$login"
+    echo "=================="
 fi
 
 result5=$(curl -H "Authorization: token $token" -H "Accept: application/vnd.github.v3.full+json" \
