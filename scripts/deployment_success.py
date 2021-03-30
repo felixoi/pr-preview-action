@@ -18,6 +18,3 @@ r = requests.post(f'{github_api}/repos/{repo}/deployments/{deployment_id}/status
                   }),
                   headers=headers)
 r.raise_for_status()
-
-r = requests.post(f'https://api.github.com/repos/{repo}/pages/builds', headers=headers)
-r.raise_for_status()
